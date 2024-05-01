@@ -24,10 +24,13 @@ EXPOSE 8000
 ARG DEV=false
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
+    apk add --update --no-cache postgresql-client && \
+    apk add --upgrade --no-cache build-base postgresql-dev musl-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ $DEV = "true" ]; then /py/bin/pip install -r /tmp/requirements.dev.txt ; fi && \
     /py/bin/pip install flake8 && \
     rm -rf /tmp && \
+    apk del build-base postgresql-dev musl-dev && \
     adduser \
         --disabled-password \
         --no-create-home \
